@@ -40,4 +40,18 @@ ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
 
-stylesheet: EOF;
+stylesheet: (styleRule | Assigment)*;
+styleRule: selector OPEN_BRACE body CLOSE_BRACE; // .active { body }
+selector: CLASS_IDENT | ID_IDENT | LOWER_IDENT; // .active | #menu | a   lower ident for plain alements
+
+body: declaration*;
+declaration: property COLON expression SEMICOLON;
+property: 'width' | 'height' | 'color' | 'background-color' | 'colour' | 'background-colour';
+
+expression: literal;
+literal: colorLiteral | pixelLiteral | percentageLiteral | boolLiteral | scalarLiteral;
+colorLiteral: COLOR;
+pixelLiteral: PIXELSIZE;
+percentageLiteral : PERCENTAGE;
+boolLiteral: TRUE | FALSE;
+scalarLiteral: SCALAR;
