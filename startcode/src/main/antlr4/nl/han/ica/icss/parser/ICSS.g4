@@ -40,15 +40,17 @@ ASSIGNMENT_OPERATOR: ':=';
 
 //--- PARSER: ---
 
-stylesheet: (styleRule | variableAssignment)*;
+stylesheet: (styleRule | variableAssignment | ifClause)*;
 styleRule: selector OPEN_BRACE body CLOSE_BRACE; // .active { body }
 selector: CLASS_IDENT | ID_IDENT | LOWER_IDENT; // .active | #menu | a   lower ident for plain alements
 
-body: declaration*;
-declaration: property COLON expression SEMICOLON;
+body: declaration* variableAssignment* ifClause*;
+declaration: property COLON (expression | operation) SEMICOLON;
 property: 'width' | 'height' | 'color' | 'background-color' | 'colour' | 'background-colour';
 
 expression: literal | variableReference;
+
+//TYPES (as literal)
 literal: colorLiteral | pixelLiteral | percentageLiteral | boolLiteral | scalarLiteral;
 colorLiteral: COLOR;
 pixelLiteral: PIXELSIZE;
@@ -60,3 +62,13 @@ scalarLiteral: SCALAR;
 
 variableAssignment: variableReference ASSIGNMENT_OPERATOR literal SEMICOLON;
 variableReference: CAPITAL_IDENT;
+
+//CALCULATIONS
+//Needs to have a label otherwise it will move up 2 levels with a normal expression
+operation: expression       #expressionOperation
+|operation MUL operation    #multiplyOperation
+| operation PLUS operation  #addOperation
+| operation MIN operation   #subtractOperation;
+
+//IF/ELSE
+ifClause: IF BOX_BRACKET_OPEN expression BOX_BRACKET_CLOSE OPEN_BRACE body CLOSE_BRACE;

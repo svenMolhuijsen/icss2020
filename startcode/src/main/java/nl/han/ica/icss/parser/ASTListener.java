@@ -2,6 +2,9 @@ package nl.han.ica.icss.parser;
 
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.*;
+import nl.han.ica.icss.ast.operations.AddOperation;
+import nl.han.ica.icss.ast.operations.MultiplyOperation;
+import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.ast.selectors.ClassSelector;
 import nl.han.ica.icss.ast.selectors.IdSelector;
 import nl.han.ica.icss.ast.selectors.TagSelector;
@@ -115,6 +118,79 @@ public class ASTListener extends ICSSBaseListener {
         currentContainer.peek().addChild(new ScalarLiteral(ctx.SCALAR().toString()));
     }
 
+
+    //OPERATIONS
+    @Override
+    public void enterMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) {
+        MultiplyOperation mul = new MultiplyOperation();
+        currentContainer.peek().addChild(mul);
+        currentContainer.push(mul);
+    }
+
+    @Override
+    public void exitMultiplyOperation(ICSSParser.MultiplyOperationContext ctx) {
+        currentContainer.pop();
+
+    }
+
+    @Override
+    public void enterAddOperation(ICSSParser.AddOperationContext ctx) {
+        AddOperation add = new AddOperation();
+        currentContainer.peek().addChild(add);
+        currentContainer.push(add);
+    }
+
+    @Override
+    public void exitAddOperation(ICSSParser.AddOperationContext ctx) {
+        currentContainer.pop();
+    }
+
+    @Override
+    public void enterSubtractOperation(ICSSParser.SubtractOperationContext ctx) {
+        SubtractOperation min = new SubtractOperation();
+        currentContainer.peek().addChild(min);
+        currentContainer.push(min);
+        return;
+    }
+
+    @Override
+    public void exitSubtractOperation(ICSSParser.SubtractOperationContext ctx) {
+        currentContainer.pop();
+    }
+
+    //CALCULATION
+    //TODO LET THIS WORK WITHOUT LABELS (see g4 file)
+//    @Override
+//    public void enterOperation(ICSSParser.OperationContext ctx) {
+//        TerminalNode PLUS = ctx.;
+//        TerminalNode MIN = ctx.MIN();
+//        TerminalNode  MUL = ctx.MUL();
+//
+//        if(PLUS != null){
+//            AddOperation add = new AddOperation();
+//            currentContainer.peek().addChild(add);
+//            currentContainer.push(add);
+//            return;
+//        }else if(MIN != null){
+//            SubtractOperation min = new SubtractOperation();
+//            currentContainer.peek().addChild(min);
+//            currentContainer.push(min);
+//            return;
+//        }else if(MUL != null){
+//            MultiplyOperation mul = new MultiplyOperation();
+//            currentContainer.peek().addChild(mul);
+//            currentContainer.push(mul);
+//            return;
+//
+//        }
+//    }
+//
+//    @Override
+//    public void exitOperation(ICSSParser.OperationContext ctx) {
+//
+//    }
+
+
     //VARAIBLES
     @Override
     public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
@@ -133,5 +209,17 @@ public class ASTListener extends ICSSBaseListener {
         currentContainer.pop();
     }
 
+    //IFELSE
+    @Override
+    public void enterIfClause(ICSSParser.IfClauseContext ctx) {
+        IfClause ifClause = new IfClause();
+        currentContainer.peek().addChild(ifClause);
+        currentContainer.push(ifClause);
+    }
+
+    @Override
+    public void exitIfClause(ICSSParser.IfClauseContext ctx) {
+        currentContainer.pop();
+    }
 
 }
