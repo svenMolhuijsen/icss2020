@@ -58,6 +58,11 @@ public class EvalExpressions implements Transform {
             if (operation.rhs instanceof VariableReference) {
                 operation.rhs = getVar((VariableReference) operation.rhs);
             }
+        } else if (node instanceof IfClause) {
+            IfClause clause = (IfClause) node;
+            if (clause.conditionalExpression instanceof VariableReference) {
+                clause.conditionalExpression = getVar((VariableReference) clause.conditionalExpression);
+            }
         }
 
 
