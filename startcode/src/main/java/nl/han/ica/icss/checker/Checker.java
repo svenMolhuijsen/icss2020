@@ -109,7 +109,7 @@ public class Checker {
             }
             //TODO: CHECK IN FUNCTIONS
 
-            node.setError("Values not compatible!");
+//            node.setError("Values not compatible!");
         }
     }
 
