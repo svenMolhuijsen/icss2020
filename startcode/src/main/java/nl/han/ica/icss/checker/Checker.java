@@ -73,7 +73,7 @@ public class Checker {
                 }
             } else if (node instanceof MultiplyOperation) {
                 if (left != SCALAR && right != SCALAR) {
-                    node.setError("Types not compatible, cannot add pixels and percentages");
+                    node.setError("Need to multiply with a Scalair value");
                     return;
                 }
             }
