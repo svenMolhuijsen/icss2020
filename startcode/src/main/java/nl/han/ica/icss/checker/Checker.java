@@ -66,7 +66,10 @@ public class Checker {
             ExpressionType left = findType(((Operation) node).lhs);
             ExpressionType right = findType(((Operation) node).rhs);
 
-            if (node instanceof AddOperation || node instanceof SubtractOperation) {
+            if (left == COLOR || right == COLOR) {
+                node.setError("cannot use colors in operations");
+                return;
+            } else if (node instanceof AddOperation || node instanceof SubtractOperation) {
                 if (left != right) {
                     node.setError("Types not compatible");
                     return;
@@ -77,10 +80,7 @@ public class Checker {
                     return;
                 }
             }
-            if (left == COLOR || right == COLOR) {
-                node.setError("cannot use colors in operations");
-                return;
-            }
+
         }
     }
 
@@ -107,9 +107,7 @@ public class Checker {
             if ((left.equals("true") || left.equals("false")) && right == BOOL) {
                 return;
             }
-            //TODO: CHECK IN FUNCTIONS
-
-//            node.setError("Values not compatible!");
+            node.setError("Values not compatible!");
         }
     }
 
@@ -140,6 +138,16 @@ public class Checker {
                 if (item.containsKey(((VariableReference) expression).name)) {
                     return item.get(((VariableReference) expression).name);
                 }
+            }
+        } else if (expression instanceof Operation) {
+//            returns type of operation if operations are combined
+            ExpressionType l = findType(((Operation) expression).lhs);
+            ExpressionType r = findType(((Operation) expression).rhs);
+
+            if (r != SCALAR) {
+                return r;
+            } else {
+                return l;
             }
         }
         return ExpressionType.UNDEFINED;

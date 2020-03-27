@@ -18,10 +18,12 @@ public class Generator {
     private String generateRecursive(ASTNode node) {
         String s = "";
 
+        //If stylenode, open brackets
         if (node instanceof Stylerule) {
             s += ((Stylerule) node).selectors.get(0);
             s += " {\n";
         }
+        //if declaration
         if (node instanceof Declaration) {
             s += "  " + ((Declaration) node).property.name + ": ";
             s += getExpressionString(((Declaration) node).expression) + ";\n";
